@@ -20,7 +20,7 @@ services:
         source: ./.env
         target: /app/.env
       - type: bind
-        source: ./librechat.makna.yaml
+        source: ./aipedia/librechat.makna.yaml
         target: /app/librechat.yaml
 
   mongodb:
