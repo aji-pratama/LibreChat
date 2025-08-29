@@ -48,6 +48,17 @@ __blobstorage__/**/*
 # Deployed apps should consider commenting these lines out:
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules/
+
+# AIPEDIA Custom Configuration
+# Track aipedia folder but ignore sensitive files
+!aipedia/
+aipedia/.env
+aipedia/*backup*
+aipedia/data/
+aipedia/logs/
+aipedia/uploads/
+aipedia/meili_data*/
+aipedia/data-node/
 meili_data/
 api/node_modules/
 client/node_modules/

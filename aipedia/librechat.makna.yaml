@@ -1,0 +1,151 @@
+version: 1.0.8
+
+cache: true
+
+interface:
+  privacyPolicy:
+    externalUrl: 'https://aipedia.pro/privacy-policy'
+    openNewTab: true
+
+  termsOfService:
+    externalUrl: 'https://aipedia.pro/tos'
+    openNewTab: true
+
+registration:
+  socialLogins: ["google"]
+
+balance:
+  enabled: true
+  startBalance: 20000
+  autoRefillEnabled: false
+
+endpoints:
+
+  # agents:
+  #   recursionLimit: 50
+  #   maxRecursionLimit: 100
+  #   disableBuilder: true
+  #   capabilities:
+  #     - "file_search"
+  #     - "tools"
+  #     - "artifacts"
+  #     - "ocr"
+  # anthropic:
+  #   streamRate: 25
+  #   titleModel: "claude-3-5-haiku-20241022"
+
+  custom:
+    - name: "OpenAI"
+      apiKey: "${OPENAI_API_KEY}"
+      baseURL: "https://api.openai.com/v1"
+      iconURL: "/assets/openai.svg"
+      models:
+        default: ["gpt-4o", "gpt-4o-mini"]
+        fetch: false
+      titleConvo: true
+      titleModel: "gpt-4o"
+      forcePrompt: false
+      modelDisplayLabel: "OpenAI"
+
+    - name: "Claude"
+      apiKey: "${ANTHROPIC_API_KEY}"
+      baseURL: "https://api.anthropic.com/v1"
+      iconURL: "/assets/anthropic.svg"
+      models:
+        default: ["claude-3-5-haiku-20241022", "claude-3-5-sonnet-20241022"]
+        fetch: false
+      titleConvo: true
+      titleModel: "claude-3.5-haiku"
+      forcePrompt: false
+      modelDisplayLabel: "Claude"
+
+    - name: "Gemini"
+      apiKey: "${GOOGLE_API_KEY}"
+      baseURL: "https://generativelanguage.googleapis.com/v1beta"
+      iconURL: "/assets/gemini.svg"
+      models:
+        default: ["gemini-1.5"]
+        fetch: false
+      titleConvo: true
+      titleModel: "gemini-1.5"
+      forcePrompt: false
+      modelDisplayLabel: "Gemini"
+
+modelSpecs:
+  enforce: true
+  prioritize: true
+  list:
+    - name: "gpt-4o"
+      label: "GPT-4o"
+      description: "OpenAI GPT-4o"
+      default: true
+      iconURL: "/assets/openai.svg"
+      preset:
+        endpoint: "OpenAI"
+        model: "gpt-4o"
+        maxContextTokens: 16384
+        max_tokens: 1024
+        temperature: 0.75
+        promptPrefix: |
+          You are an AI assistant. Focus on clear, actionable information.
+          Keep responses concise and relevant.
+          If asked about your model, answer: gpt-4o
+
+    - name: "gpt-4o-mini"
+      label: "GPT-4o Mini"
+      description: "Lightweight OpenAI model"
+      iconURL: "/assets/openai.svg"
+      preset:
+        endpoint: "OpenAI"
+        model: "gpt-4o-mini"
+        maxContextTokens: 16384
+        max_tokens: 1024
+        temperature: 0.75
+        promptPrefix: |
+          You are an AI assistant. Focus on clear, actionable information.
+          Keep responses concise and relevant.
+          If asked about your model, answer: gpt-4o-mini
+
+    - name: "claude-3.5-haiku"
+      label: "Claude 3.5 Haiku"
+      description: "Fast and light Claude model"
+      iconURL: "/assets/anthropic.svg"
+      preset:
+        endpoint: "anthropic"
+        model: "claude-3-5-haiku-20241022"
+        maxContextTokens: 16384
+        max_tokens: 1024
+        temperature: 0.75
+        promptPrefix: |
+          You are an AI assistant. Focus on clear, actionable information.
+          Keep responses concise and relevant.
+          If asked about your model, answer: claude-3.5-haiku
+
+    - name: "claude-3.5-sonnet"
+      label: "Claude 3.5 Sonnet"
+      description: "Balanced Claude model"
+      iconURL: "/assets/anthropic.svg"
+      preset:
+        endpoint: "anthropic"
+        model: "claude-3-5-sonnet-20241022"
+        maxContextTokens: 16384
+        max_tokens: 1024
+        temperature: 0.75
+        promptPrefix: |
+          You are an AI assistant. Focus on clear, actionable information.
+          Keep responses concise and relevant.
+          If asked about your model, answer: claude-3.5-sonnet
+
+    - name: "gemini-1.5"
+      label: "Gemini 1.5"
+      description: "Google Gemini for precise and efficient output"
+      preset:
+        endpoint: "Gemini"
+        model: "gemini-1.5"
+        maxContextTokens: 16384
+        max_tokens: 1024
+        temperature: 0.75
+        promptPrefix: |
+          You are an AI assistant. Focus on clear, actionable information.
+          Keep responses concise and relevant.
+          If asked about your model, answer: gemini-1.5

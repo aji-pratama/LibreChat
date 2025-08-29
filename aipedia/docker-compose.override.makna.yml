@@ -1,0 +1,29 @@
+services:
+
+  api:
+    image: librechat
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: node
+    # Remove extra_hosts for podman compatibility
+    extra_hosts: []
+    environment:
+      - HOST=0.0.0.0
+      - MONGO_URI=${MONGO_URI}
+      - MEILI_HOST=http://meilisearch:7700
+      - RAG_PORT=${RAG_PORT}
+      - RAG_API_URL=http://rag_api:${RAG_PORT}
+      - CONFIG_PATH=/app/librechat.yaml
+    volumes:
+      - type: bind
+        source: ./.env
+        target: /app/.env
+      - type: bind
+        source: ./librechat.makna.yaml
+        target: /app/librechat.yaml
+
+  mongodb:
+    image: mongo:4.4.18
+    ports:
+      - "27017:27017"
