@@ -74,7 +74,7 @@ endpoints:
     - name: 'Gemini'
       apiKey: '${GOOGLE_API_KEY}'
       baseURL: 'https://generativelanguage.googleapis.com/v1beta'
-      iconURL: '/assets/gemini.svg'
+      iconURL: '/assets/google.svg'
       models:
         default: ['gemini-1.5-pro', 'gemini-1.5-flash']
         fetch: false

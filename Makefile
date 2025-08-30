@@ -56,6 +56,9 @@ appsh:
 apprm:
 	podman rmi -f localhost/librechat:latest || true
 
+appres:
+	podman restart LibreChat
+
 # MONGO QUERY
 
 mongo:
