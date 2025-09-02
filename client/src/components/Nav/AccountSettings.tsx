@@ -67,6 +67,7 @@ function AccountSettings() {
                 <span>{new Intl.NumberFormat().format(Math.round(balanceQuery.data.tokenCredits))}</span>
               </div>
             </Select.SelectItem>
+            <DropdownMenuSeparator />
             <Select.SelectItem
               value=""
               onClick={() => setShowTransactionHistory(true)}
@@ -75,7 +76,6 @@ function AccountSettings() {
               <BarChart3 className="icon-md" aria-hidden="true" />
               Usage Logs
             </Select.SelectItem>
-            <DropdownMenuSeparator />
           </>
         )}
         <Select.SelectItem

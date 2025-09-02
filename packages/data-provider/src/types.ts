@@ -661,8 +661,10 @@ export type TTransactionHistoryResponse = {
     context?: string;
     createdAt: string;
   }[];
-  totalCount: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
 };
