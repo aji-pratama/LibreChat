@@ -6,6 +6,7 @@ export * from './token';
 export * from './convo';
 export * from './session';
 export * from './balance';
+export * from './balanceHistory';
 export * from './banner';
 export * from './message';
 export * from './agent';

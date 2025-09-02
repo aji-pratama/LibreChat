@@ -95,6 +95,10 @@ export function getTransactionHistory(params?: { page?: number; limit?: number }
   return request.get(endpoints.transactionHistory(params));
 }
 
+export function getBalanceHistory(params?: { page?: number; limit?: number }): Promise<any> {
+  return request.get(endpoints.balanceHistory(params));
+}
+
 export const updateTokenCount = (text: string) => {
   return request.post(endpoints.tokenizer(), { arg: text });
 };

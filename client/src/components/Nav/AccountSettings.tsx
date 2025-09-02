@@ -1,11 +1,12 @@
 import { useState, memo } from 'react';
 import { useRecoilState } from 'recoil';
 import * as Select from '@ariakit/react/select';
-import { FileText, LogOut } from 'lucide-react';
+import { FileText, LogOut, BarChart3 } from 'lucide-react';
 import { LinkIcon, GearIcon, DropdownMenuSeparator, Avatar } from '@librechat/client';
 import { useGetStartupConfig, useGetUserBalance } from '~/data-provider';
 import FilesView from '~/components/Chat/Input/Files/FilesView';
 import TransactionHistoryView from '~/components/Chat/Input/Files/TransactionHistoryView';
+import BalanceHistoryView from '~/components/Chat/Input/Files/BalanceHistoryView';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { useLocalize } from '~/hooks';
 import Settings from './Settings';
@@ -21,6 +22,7 @@ function AccountSettings() {
   const [showSettings, setShowSettings] = useState(false);
   const [showFiles, setShowFiles] = useRecoilState(store.showFiles);
   const [showTransactionHistory, setShowTransactionHistory] = useState(false);
+  const [showBalanceHistory, setShowBalanceHistory] = useState(false);
 
   return (
     <Select.SelectProvider>
@@ -57,13 +59,21 @@ function AccountSettings() {
           <>
             <Select.SelectItem
               value=""
-              onClick={() => setShowTransactionHistory(true)}
+              onClick={() => setShowBalanceHistory(true)}
               className="select-item text-sm"
             >
               <div className="flex w-full justify-between">
                 <span>{localize('com_nav_balance')}:</span>
                 <span>{new Intl.NumberFormat().format(Math.round(balanceQuery.data.tokenCredits))}</span>
               </div>
+            </Select.SelectItem>
+            <Select.SelectItem
+              value=""
+              onClick={() => setShowTransactionHistory(true)}
+              className="select-item text-sm"
+            >
+              <BarChart3 className="icon-md" aria-hidden="true" />
+              Usage Logs
             </Select.SelectItem>
             <DropdownMenuSeparator />
           </>
@@ -111,6 +121,12 @@ function AccountSettings() {
         <TransactionHistoryView
           open={showTransactionHistory}
           onOpenChange={setShowTransactionHistory}
+        />
+      )}
+      {showBalanceHistory && (
+        <BalanceHistoryView
+          open={showBalanceHistory}
+          onOpenChange={setShowBalanceHistory}
         />
       )}
     </Select.SelectProvider>

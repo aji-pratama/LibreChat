@@ -1,14 +1,30 @@
-import { OGDialog, OGDialogContent, OGDialogHeader, OGDialogTitle } from '@librechat/client';
-import { useGetTransactionHistory } from '~/data-provider';
-import { DataTable } from './Table';
+import { useMemo } from 'react';
+import { OGDialog, OGDialogContent, OGDialogHeader, OGDialogTitle, DataTable } from '@librechat/client';
+import { useTransactionHistoryInfiniteQuery } from '~/data-provider';
 import { transactionColumns } from '~/components/Chat/Input/Files/TransactionColumns';
 import { useLocalize } from '~/hooks';
 
 export default function TransactionHistory({ open, onOpenChange }) {
   const localize = useLocalize();
 
-  const { data, isLoading } = useGetTransactionHistory(1, 10, { enabled: open });
-  const transactions = data?.transactions || [];
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useTransactionHistoryInfiniteQuery(
+    { limit: 20 },
+    { enabled: open }
+  );
+
+  const transactions = useMemo(() => {
+    return data?.pages.flatMap(page => page.transactions) || [];
+  }, [data]);
+
+  const handleFetchNextPage = async () => {
+    await fetchNextPage();
+  };
 
   return (
     <OGDialog open={open} onOpenChange={onOpenChange}>
@@ -24,7 +40,14 @@ export default function TransactionHistory({ open, onOpenChange }) {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
           </div>
         ) : (
-          <DataTable columns={transactionColumns} data={transactions} />
+          <DataTable 
+            columns={transactionColumns} 
+            data={transactions}
+            isFetchingNextPage={isFetchingNextPage}
+            hasNextPage={hasNextPage}
+            fetchNextPage={handleFetchNextPage}
+            isLoading={isLoading}
+          />
         )}
       </OGDialogContent>
     </OGDialog>

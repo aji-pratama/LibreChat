@@ -1,6 +1,7 @@
 const { logger } = require('@librechat/data-schemas');
 const { getMultiplier, getCacheMultiplier } = require('./tx');
 const { Transaction, Balance } = require('~/db/models');
+const { recordBalanceChange } = require('./balanceHistoryMethods');
 
 const cancelRate = 1.15;
 
@@ -13,10 +14,13 @@ const cancelRate = 1.15;
  * @param {string|mongoose.Types.ObjectId} params.user - The user ID.
  * @param {number} params.incrementValue - The value to increment the balance by (can be negative).
  * @param {import('mongoose').UpdateQuery<import('@librechat/data-schemas').IBalance>['$set']} [params.setValues] - Optional additional fields to set.
+ * @param {string} [params.changeType] - Type of balance change for history tracking.
+ * @param {string} [params.description] - Description of the balance change.
+ * @param {string} [params.relatedTransactionId] - Related transaction ID.
  * @returns {Promise<Object>} Returns the updated balance document (lean).
  * @throws {Error} Throws an error if the update fails after multiple retries.
  */
-const updateBalance = async ({ user, incrementValue, setValues }) => {
+const updateBalance = async ({ user, incrementValue, setValues, changeType, description, relatedTransactionId }) => {
   let maxRetries = 10; // Number of times to retry on conflict
   let delay = 50; // Initial retry delay in ms
   let lastError = null;
@@ -59,6 +63,21 @@ const updateBalance = async ({ user, incrementValue, setValues }) => {
 
         if (updatedBalance) {
           // Success! The update was applied based on the expected current state.
+          // Record balance change in history
+          if (changeType && description) {
+            try {
+              await recordBalanceChange({
+                user,
+                previousBalance: currentCredits,
+                newBalance: updatedBalance.tokenCredits,
+                changeType,
+                description,
+                relatedTransactionId,
+              });
+            } catch (error) {
+              logger.error('[updateBalance] Failed to record balance history', { error: error.message });
+            }
+          }
           return updatedBalance;
         }
         // If updatedBalance is null, it means tokenCredits changed between read and write (conflict).
@@ -170,10 +189,13 @@ async function createAutoRefillTransaction(txData) {
   await transaction.save();
 
   const balanceResponse = await updateBalance({
-    user: transaction.user,
-    incrementValue: txData.rawAmount,
-    setValues: { lastRefill: new Date() },
-  });
+          user: user,
+          incrementValue: txData.rawAmount,
+          setValues: { lastRefill: new Date() },
+          changeType: 'autoRefill',
+          description: `Auto-refill: ${txData.rawAmount} credits`,
+          relatedTransactionId: transaction._id,
+        });
   const result = {
     rate: transaction.rate,
     user: transaction.user.toString(),
@@ -204,9 +226,15 @@ async function createTransaction(_txData) {
   }
 
   let incrementValue = transaction.tokenValue;
+  const changeType = incrementValue > 0 ? 'refill' : 'spend';
+  const description = `${transaction.tokenType} - ${transaction.model || 'Unknown'} (${transaction.context || 'N/A'})`;
+  
   const balanceResponse = await updateBalance({
     user: transaction.user,
     incrementValue,
+    changeType,
+    description,
+    relatedTransactionId: transaction._id,
   });
 
   return {
@@ -237,10 +265,15 @@ async function createStructuredTransaction(_txData) {
   }
 
   let incrementValue = transaction.tokenValue;
+  const changeType = incrementValue > 0 ? 'refill' : 'spend';
+  const description = `${transaction.tokenType} - ${transaction.model || 'Unknown'} (${transaction.context || 'N/A'})`;
 
   const balanceResponse = await updateBalance({
     user: transaction.user,
     incrementValue,
+    changeType,
+    description,
+    relatedTransactionId: transaction._id,
   });
 
   return {
