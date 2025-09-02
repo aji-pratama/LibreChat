@@ -44,6 +44,11 @@ export const user = () => `${BASE_URL}/api/user`;
 
 export const balance = () => `${BASE_URL}/api/balance`;
 
+export const transactionHistory = (params?: { page?: number; limit?: number }) => {
+  const query = params ? buildQuery(params) : '';
+  return `${BASE_URL}/api/balance/transactions${query}`;
+};
+
 export const userPlugins = () => `${BASE_URL}/api/user/plugins`;
 
 export const deleteUser = () => `${BASE_URL}/api/user/delete`;

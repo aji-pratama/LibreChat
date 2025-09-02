@@ -487,6 +487,21 @@ export const useGetEffectivePermissionsQuery = (
   });
 };
 
+export const useGetTransactionHistory = (
+  page: number = 1,
+  limit: number = 10,
+  config?: UseQueryOptions<t.TTransactionHistoryResponse>,
+): QueryObserverResult<t.TTransactionHistoryResponse> => {
+  return useQuery<t.TTransactionHistoryResponse>({
+    queryKey: [QueryKeys.transactionHistory, page, limit],
+    queryFn: () => dataService.getTransactionHistory({ page, limit }),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    ...config,
+  });
+};
+
 export const useMCPServerConnectionStatusQuery = (
   serverName: string,
   config?: UseQueryOptions<MCPServerConnectionStatusResponse>,

@@ -91,6 +91,10 @@ export function getUserBalance(): Promise<t.TBalanceResponse> {
   return request.get(endpoints.balance());
 }
 
+export function getTransactionHistory(params?: { page?: number; limit?: number }): Promise<t.TTransactionHistoryResponse> {
+  return request.get(endpoints.transactionHistory(params));
+}
+
 export const updateTokenCount = (text: string) => {
   return request.post(endpoints.tokenizer(), { arg: text });
 };

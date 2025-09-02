@@ -314,16 +314,31 @@ function calculateStructuredTokenValue(txn) {
 }
 
 /**
- * Queries and retrieves transactions based on a given filter.
+ * Queries and retrieves transactions based on a given filter with pagination support.
  * @async
  * @function getTransactions
- * @param {Object} filter - MongoDB filter object to apply when querying transactions.
+ * @param {Object} options - Query options object.
+ * @param {Object} options.filter - MongoDB filter object to apply when querying transactions.
+ * @param {string} [options.sort='-createdAt'] - Sort order for the results.
+ * @param {number} [options.limit=20] - Maximum number of results to return.
+ * @param {number} [options.skip=0] - Number of results to skip for pagination.
  * @returns {Promise<Array>} A promise that resolves to an array of matched transactions.
  * @throws {Error} Throws an error if querying the database fails.
  */
-async function getTransactions(filter) {
+async function getTransactions(options) {
   try {
-    return await Transaction.find(filter).lean();
+    // Handle both old and new function signatures for backward compatibility
+    if (typeof options === 'object' && !options.filter && !options.sort && !options.limit && !options.skip) {
+      // Old signature: getTransactions(filter)
+      return await Transaction.find(options).lean();
+    }
+    
+    const { filter, sort = '-createdAt', limit = 20, skip = 0 } = options;
+    return await Transaction.find(filter)
+      .sort(sort)
+      .limit(limit)
+      .skip(skip)
+      .lean();
   } catch (error) {
     logger.error('Error querying transactions:', error);
     throw error;
