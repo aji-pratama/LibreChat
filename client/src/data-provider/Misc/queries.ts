@@ -43,3 +43,22 @@ export const useGetSearchEnabledQuery = (
     enabled: (config?.enabled ?? true) === true && queriesEnabled,
   });
 };
+
+export const useGetTransactionHistory = (
+  page: number = 1,
+  limit: number = 10,
+  config?: UseQueryOptions<t.TTransactionHistoryResponse>,
+): QueryObserverResult<t.TTransactionHistoryResponse> => {
+  const queriesEnabled = useRecoilValue<boolean>(store.queriesEnabled);
+  return useQuery<t.TTransactionHistoryResponse>(
+    [QueryKeys.transactionHistory, page, limit],
+    () => dataService.getTransactionHistory({ page, limit }),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+      ...config,
+      enabled: (config?.enabled ?? true) === true && queriesEnabled,
+    },
+  );
+};

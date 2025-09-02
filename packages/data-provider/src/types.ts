@@ -649,3 +649,20 @@ export type TBalanceResponse = {
   lastRefill?: Date;
   refillAmount?: number;
 };
+
+export type TTransactionHistoryResponse = {
+  transactions: {
+    _id: string;
+    userId: string;
+    tokenType: string;
+    rawAmount: number;
+    tokenValue: number;
+    model?: string;
+    context?: string;
+    createdAt: string;
+  }[];
+  totalCount: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};
