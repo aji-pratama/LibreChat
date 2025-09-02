@@ -12,15 +12,16 @@ interface:
     openNewTab: true
     modalAcceptance: true
 
-  endpointsMenu: true
+  endpointsMenu: false
   modelSelect: true
-  parameters: true
-  sidePanel: true
-  presets: true
+  parameters: false
+  sidePanel: false
+  presets: false
   prompts: true
-  bookmarks: true
+  bookmarks: false
   multiConvo: true
-  agents: true
+  agents: false
+  runCode: false
 
 registration:
   socialLogins: ['google']
