@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { OGDialog, OGDialogContent, OGDialogHeader, OGDialogTitle, Button } from '@librechat/client';
 import { useGetTransactionHistory } from '~/data-provider';
 import { useLocalize } from '~/hooks';
+import type { TTransactionHistoryResponse } from 'librechat-data-provider';
 
 export default function TransactionHistory({ open, onOpenChange }) {
   const localize = useLocalize();
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
-  const { data, isLoading } = useGetTransactionHistory(
+  const { data, isLoading }: { data: TTransactionHistoryResponse | undefined, isLoading: boolean } = useGetTransactionHistory(
     currentPage,
     limit,
     { enabled: open }

@@ -59,18 +59,6 @@ endpoints:
       forcePrompt: false
       modelDisplayLabel: 'OpenAI'
 
-    - name: 'Claude'
-      apiKey: '${ANTHROPIC_API_KEY}'
-      baseURL: 'https://api.anthropic.com/v1'
-      # iconURL: '/assets/anthropic.svg'
-      models:
-        default: ['claude-3-5-haiku-20241022', 'claude-3-5-sonnet-20241022']
-        fetch: false
-      titleConvo: true
-      titleModel: 'claude-3-5-haiku-20241022'
-      forcePrompt: false
-      modelDisplayLabel: 'Claude'
-
     - name: 'Gemini'
       apiKey: '${GOOGLE_API_KEY}'
       baseURL: 'https://generativelanguage.googleapis.com/v1beta'
@@ -82,3 +70,15 @@ endpoints:
       titleModel: 'gemini-1.5-pro'
       forcePrompt: false
       modelDisplayLabel: 'Gemini'
+
+    - name: 'Claude'
+      apiKey: '${ANTHROPIC_API_KEY}'
+      baseURL: 'https://api.anthropic.com/v1'
+      # iconURL: '/assets/anthropic.svg'
+      models:
+        default: ['claude-3-5-haiku-20241022', 'claude-3-5-sonnet-20241022']
+        fetch: false
+      titleConvo: true
+      titleModel: 'claude-3-5-haiku-20241022'
+      forcePrompt: false
+      modelDisplayLabel: 'Claude'

@@ -75,8 +75,8 @@ export const useTransactionHistoryInfiniteQuery = (
     queryFn: ({ pageParam = 1 }) => 
       dataService.getTransactionHistory({ page: pageParam as number, limit }),
     getNextPageParam: (lastPage) => {
-      const { page, totalPages } = lastPage;
-      return page < totalPages ? page + 1 : undefined;
+      const { pagination } = lastPage;
+      return pagination.page < pagination.pages ? pagination.page + 1 : undefined;
     },
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
