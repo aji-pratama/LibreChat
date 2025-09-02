@@ -12,7 +12,7 @@ function ModelSelectorContent() {
   const localize = useLocalize();
 
   const {
-    // LibreChat
+    // AIPedia
     agentsMap,
     modelSpecs,
     mappedEndpoints,
